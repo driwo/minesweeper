@@ -10,6 +10,7 @@ public abstract class AbstractTile implements TestableTile {
     public abstract void unflag();
     public abstract boolean isFlagged();
     public abstract boolean isOpened();
+    public abstract void setExplosief();
     public final void setTileNotifier(ITileStateNotifier notifier) {
         this.viewNotifier = notifier;
     }

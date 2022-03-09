@@ -29,6 +29,8 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
     @Override
     public void startNewGame(int row, int col, int explosionCount) {
+
+        createWorld(row, col);
         int count = 0;
         int[] explosive = new int[explosionCount];
         Random randomGenerator = new Random();
@@ -45,6 +47,16 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
                 count++;
             }
         }
+
+
+        int rij = 0;
+
+        for(int i = 0; i< explosive.length; i++)
+        {
+            int j = i/col;
+            rij = i%col;
+            wereld[rij][j].setExplosief();
+        }
     }
 
     @Override
@@ -60,7 +72,38 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
     @Override
     public void setWorld(AbstractTile[][] world) {
-        wereld = world;
+
+        width = world.length;
+        height = world[0].length;
+
+        int m;
+        int n;
+        for(m = 0; m < height; m++)
+        {
+            for(n = 0; n < width; n++)
+            {
+                Tile tile = new Tile();
+                wereld[m][n] = tile;
+            }
+        }
+    }
+
+
+    public void createWorld(int h, int w) {
+
+        width = w;
+        height =h;
+        wereld = new AbstractTile[width][height];
+        int m;
+        int n;
+        for(m = 0; m < height -1 ; m++)
+        {
+            for(n = 0; n < width -1; n++)
+            {
+                Tile tile = new Tile();
+                wereld[m][n] = tile;
+            }
+        }
     }
 
     @Override
@@ -80,8 +123,6 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
 
     // LATE PAS!!
-
-
     @Override
     public void deactivateFirstTileRule() {
 
@@ -89,11 +130,13 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
     @Override
     public AbstractTile generateEmptyTile() {
-        return null;
+        Tile tile = new Tile();
+        return tile;
     }
 
     @Override
     public AbstractTile generateExplosiveTile() {
-        return null;
+        Tile tile = new Tile();
+        return tile;
     }
 }
