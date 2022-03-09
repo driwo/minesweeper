@@ -1,5 +1,5 @@
 package model;
-//Hoi janne is ni zo bien
+//Hoi
 import notifier.IGameStateNotifier;
 import test.TestableMinesweeper;
 
