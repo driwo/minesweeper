@@ -61,7 +61,6 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
     @Override
     public void toggleFlag(int x, int y) {
-
     }
 
     @Override
