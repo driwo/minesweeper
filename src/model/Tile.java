@@ -5,6 +5,14 @@ import test.TestableTile;
 public class Tile extends AbstractTile implements TestableTile
 {
     boolean visible;
+    boolean explosief;
+
+    public Tile()
+    {
+
+    }
+
+
 //test
     @Override
     public boolean open() {
@@ -38,6 +46,6 @@ public class Tile extends AbstractTile implements TestableTile
 
     @Override
     public void setExplosief() {
-
+        explosief = true;
     }
 }

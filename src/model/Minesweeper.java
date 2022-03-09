@@ -92,7 +92,7 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
         width = w;
         height =h;
-        wereld = new AbstractTile[width][height];
+        wereld = new AbstractTile[height][width];
         int m;
         int n;
         for(m = 0; m < height -1 ; m++)
