@@ -30,6 +30,7 @@ public class GameModelTester {
         gameModel = new Minesweeper();
     }
 
+    //Test 1 completed
     @Test
     public void testGeneratingEmptyTile() {
         TestableTile tile = gameModel.generateEmptyTile();
@@ -44,7 +45,7 @@ public class GameModelTester {
         });
         tile.open();
     }
-
+    //Test 2 completed
     @Test 
     public void testGeneratingExplosiveTile() {
         TestableTile tile = gameModel.generateEmptyTile();
