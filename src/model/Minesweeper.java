@@ -1,11 +1,13 @@
 package model;
 
 import test.TestableMinesweeper;
+import java.util.ArrayList;
 
 public class Minesweeper extends AbstractMineSweeper implements TestableMinesweeper
 {
     int width;
     int height;
+    AbstractTile[][] wereld = new AbstractTile[width][height];
 
 
     @Override
@@ -35,12 +37,13 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
     @Override
     public AbstractTile getTile(int x, int y) {
-        return null;
+
+        return ;
     }
 
     @Override
     public void setWorld(AbstractTile[][] world) {
-
+        wereld = world;
     }
 
     @Override
