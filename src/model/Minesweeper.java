@@ -2,6 +2,7 @@ package model;
 
 import test.TestableMinesweeper;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Minesweeper extends AbstractMineSweeper implements TestableMinesweeper
 {
@@ -25,9 +26,25 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
     }
 
+
     @Override
     public void startNewGame(int row, int col, int explosionCount) {
+        int count = 0;
+        int[] explosive = new int[explosionCount];
+        Random randomGenerator = new Random();
 
+        while(count < explosionCount){
+            int number = randomGenerator.nextInt(row*col);
+            boolean already = false;
+            for(int i = 0; i < explosionCount ; i++){
+                if (number == explosive[i]) { already = true;}
+            }
+
+            if(already == false){
+                explosive[count] = number;
+                count++;
+            }
+        }
     }
 
     @Override
@@ -38,7 +55,7 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
     @Override
     public AbstractTile getTile(int x, int y) {
 
-        return ;
+        return null;
     }
 
     @Override
