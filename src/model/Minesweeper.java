@@ -66,7 +66,7 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
     @Override
     public AbstractTile getTile(int x, int y) {
 
-        return null;
+        return wereld[y][x];
     }
 
     @Override
@@ -95,9 +95,9 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
         wereld = new AbstractTile[height][width];
         int m;
         int n;
-        for(m = 0; m < height -1 ; m++)
+        for(m = 0; m < height ; m++)
         {
-            for(n = 0; n < width -1; n++)
+            for(n = 0; n < width ; n++)
             {
                 Tile tile = new Tile();
                 wereld[m][n] = tile;
