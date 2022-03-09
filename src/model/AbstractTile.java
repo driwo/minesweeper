@@ -2,7 +2,7 @@ package model;
 
 import notifier.ITileStateNotifier;
 import test.TestableTile;
-
+//test
 public abstract class AbstractTile implements TestableTile {
     protected ITileStateNotifier viewNotifier;
     public abstract boolean open();
