@@ -1,5 +1,5 @@
 package model;
-//Hoi
+
 import notifier.IGameStateNotifier;
 import test.TestableMinesweeper;
 

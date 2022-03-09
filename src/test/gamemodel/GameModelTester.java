@@ -12,7 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import model.AbstractTile;
-//import model.Minesweeper;
+import model.Minesweeper;
 import notifier.IGameStateNotifier;
 import notifier.ITileStateNotifier;
 import test.TestableMinesweeper;
