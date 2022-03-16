@@ -126,9 +126,7 @@ public class GameModelTester {
             }
         });
 
-        //Dit deel hieronder geeft een fout
-        //Er is iets mis met de setWorld method maar ik vind het niet, ik heb al vanalles geprobeerd maar hij gaat
-        // op 1 of andere manier altijd buiten zenne index bij de set world
+
         gameModel.setWorld(world);
         for (int i=0; i<row; ++i) {
             for (int j=0; j<col; ++j) {

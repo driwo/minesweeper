@@ -60,7 +60,18 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
     }
 
     @Override
-    public void toggleFlag(int x, int y) {
+    public void toggleFlag(int x, int y)
+    {
+        Tile t = (Tile) wereld[x][y];
+        if(t.isFlagged() == true)
+        {
+            t.unflag();
+        }
+        else
+        {
+            t.flag();
+        }
+
     }
 
     @Override
@@ -79,13 +90,14 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
         width = world.length;
         height = world[0].length;
         wereld = new AbstractTile[width][height];
+        System.out.println(wereld);
 
         int n;
         int m;
 
         try {
-            for (m = 0; m < height; m++) {
-                for (n = 0; n < width; n++) {
+            for (m = 0; m < width; m++) {
+                for (n = 0; n < height; n++) {
                     //Tile tile = new Tile();
                     wereld[m][n] = world[m][n];
                 }
@@ -117,17 +129,20 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
     }
 
     @Override
-    public void open(int x, int y) {
-
+    public void open(int x, int y)
+    {
+        Tile t = (Tile) wereld[x][y];
+        t.open();
     }
 
     @Override
     public void flag(int x, int y) {
-
+        wereld[x][y].flag();
     }
 
     @Override
     public void unflag(int x, int y) {
+        wereld[x][y].unflag();
 
     }
 
