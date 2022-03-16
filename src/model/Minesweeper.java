@@ -65,7 +65,12 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
     @Override
     public AbstractTile getTile(int x, int y) {
-        return wereld[y][x];
+        try{
+            return wereld[y][x];
+        }
+        catch (IndexOutOfBoundsException e){
+            return null;
+        }
     }
 
     @Override
@@ -73,17 +78,24 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
         width = world.length;
         height = world[0].length;
+        wereld = new AbstractTile[width][height];
 
-        int m;
         int n;
-        for(m = 0; m < height; m++)
-        {
-            for(n = 0; n < width; n++)
-            {
-                Tile tile = new Tile();
-                wereld[m][n] = tile;
+        int m;
+
+        try {
+            for (m = 0; m < height; m++) {
+                for (n = 0; n < width; n++) {
+                    //Tile tile = new Tile();
+                    wereld[m][n] = world[m][n];
+                }
             }
         }
+        catch (IndexOutOfBoundsException e){
+
+            System.out.println("Te grote index");
+        }
+
     }
 
 
