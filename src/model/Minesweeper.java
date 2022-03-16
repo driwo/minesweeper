@@ -3,12 +3,16 @@ package model;
 import test.TestableMinesweeper;
 import java.util.ArrayList;
 import java.util.Random;
+import java.time.*;
+import java.util.concurrent.TimeUnit;
 
 public class Minesweeper extends AbstractMineSweeper implements TestableMinesweeper
 {
     int width;
     int height;
     AbstractTile[][] wereld = new AbstractTile[width][height];
+    private int count;
+    ArrayList<Integer> wachtrij = new ArrayList<>();
 
 
     @Override
@@ -33,6 +37,7 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
     @Override
     public void startNewGame(int row, int col, int explosionCount) {
 
+        wachtrij.clear();
         createWorld(row, col);
         int count = 0;
         int[] explosive = new int[explosionCount];
@@ -52,12 +57,13 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
         }
 
 
-        int rij = 0;
+        int rij;
+        int j;
 
-        for(int i = 0; i< explosive.length; i++)
+        for(int i=0; i< explosive.length; i++)
         {
-            int j = i/col;
-            rij = i%col;
+            j = explosive[i]/col;
+            rij = explosive[i]%col;
             wereld[rij][j].setExplosief();
         }
 
@@ -74,10 +80,14 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
         if(t.isFlagged() == true)
         {
             t.unflag();
+
+            viewNotifier.notifyUnflagged(x,y);
         }
         else
         {
             t.flag();
+            System.out.println("flag");
+            viewNotifier.notifyFlagged(x,y);
         }
 
     }
@@ -139,6 +149,7 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
     @Override
     public void open(int x, int y)
     {
+
         if(x <  wereld.length && y < wereld[0].length)
         {
             if(x>= 0 && y >= 0)
@@ -146,17 +157,71 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
                 Tile t = (Tile) wereld[x][y];
                 t.open();
 
+
+
                 if(t.isExplosive() == true)
                 {
                     viewNotifier.notifyExploded(x,y);
                     viewNotifier.notifyGameLost();
                 }
+
                 else
                 {
-                    viewNotifier.notifyOpened(x,y, 2);
+                    int burenbom = explosiveNbCount(x,y);
+                    viewNotifier.notifyOpened(x,y,burenbom);
+                    System.out.println(x+ "en"+ y);
+                    if(burenbom == 0)
+                    {
+                        x = x -1;
+                        y = y - 1;
+                        open(x,y);
+                    }
                 }
 
             }
+
+        }
+    }
+
+    public int explosiveNbCount(int x, int y)
+    {
+        count = 0;
+        x = x -1;
+        y = y - 1;
+        checkNb(x,y);
+        x++;
+        checkNb(x,y);
+        x++;
+        checkNb(x,y);
+        y++;
+        checkNb(x,y);
+        y++;
+        checkNb(x,y);
+        x = x -1;
+        checkNb(x,y);
+        x= x-1;
+        checkNb(x,y);
+        y= y-1;
+        checkNb(x,y);
+        return count;
+    }
+
+    public void checkNb(int x, int y)
+    {
+        try
+        {
+            Tile t = (Tile) wereld[x][y];
+            if(t.isExplosive() == true)
+            {
+                count ++;
+            }
+            else
+            {
+                wachtrij.add(x);
+                wachtrij.add(y);
+            }
+        }
+        catch (IndexOutOfBoundsException e){
 
         }
     }
@@ -166,13 +231,13 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
         wereld[x][y].flag();
         viewNotifier.notifyFlagged(x,y);
 
+
     }
 
     @Override
     public void unflag(int x, int y) {
         wereld[x][y].unflag();
         viewNotifier.notifyUnflagged(x,y);
-
     }
 
 
