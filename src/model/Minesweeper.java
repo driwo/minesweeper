@@ -65,7 +65,6 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
     @Override
     public AbstractTile getTile(int x, int y) {
-
         return wereld[y][x];
     }
 
@@ -121,7 +120,7 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
     }
 
 
-    // LATE PAS!!
+    // LATER PAS!!
     @Override
     public void deactivateFirstTileRule() {
 
@@ -136,6 +135,7 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
     @Override
     public AbstractTile generateExplosiveTile() {
         Tile tile = new Tile();
+        tile.setExplosief();
         return tile;
     }
 }

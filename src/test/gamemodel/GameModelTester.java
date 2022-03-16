@@ -61,7 +61,7 @@ public class GameModelTester {
         tile.open();
     }
 
-
+//Test 3 completed
     @Test 
     public void testInitializingNewGame() {
         final int h = 5, w=3, totalExplosion = 4;
@@ -125,6 +125,7 @@ public class GameModelTester {
                 super.setInvoked();
             }
         });
+        //Dit deel hieronder geeft een fout
         gameModel.setWorld(world);
         for (int i=0; i<row; ++i)
             for (int j=0; j<col; ++j)
