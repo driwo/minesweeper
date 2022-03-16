@@ -23,7 +23,10 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
     @Override
     public void startNewGame(Difficulty level) {
-
+        if(level == Difficulty.EASY)
+        {
+            startNewGame(8,8,10);
+        }
     }
 
 
@@ -57,6 +60,11 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
             rij = i%col;
             wereld[rij][j].setExplosief();
         }
+
+
+        setGameStateNotifier(viewNotifier);
+        viewNotifier.notifyNewGame(row, col);
+
     }
 
     @Override
@@ -131,18 +139,39 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
     @Override
     public void open(int x, int y)
     {
-        Tile t = (Tile) wereld[x][y];
-        t.open();
+        if(x <  wereld.length && y < wereld[0].length)
+        {
+            if(x>= 0 && y >= 0)
+            {
+                Tile t = (Tile) wereld[x][y];
+                t.open();
+
+                if(t.isExplosive() == true)
+                {
+                    viewNotifier.notifyExploded(x,y);
+                    viewNotifier.notifyGameLost();
+                }
+                else
+                {
+                    viewNotifier.notifyOpened(x,y, 2);
+                }
+
+            }
+
+        }
     }
 
     @Override
     public void flag(int x, int y) {
         wereld[x][y].flag();
+        viewNotifier.notifyFlagged(x,y);
+
     }
 
     @Override
     public void unflag(int x, int y) {
         wereld[x][y].unflag();
+        viewNotifier.notifyUnflagged(x,y);
 
     }
 
@@ -165,4 +194,6 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
         tile.setExplosief();
         return tile;
     }
+
+
 }

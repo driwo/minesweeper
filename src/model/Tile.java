@@ -39,7 +39,10 @@ public class Tile extends AbstractTile implements TestableTile
 
     @Override
     public boolean isExplosive() {
+
+
         return explosief;
+
     }
 
     @Override

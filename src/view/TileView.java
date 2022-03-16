@@ -31,6 +31,7 @@ public class TileView extends JButton implements ITileStateNotifier {
     @Override
     public void notifyFlagged() {
         super.setIcon(flagIcon);
+
     }
 
     @Override
