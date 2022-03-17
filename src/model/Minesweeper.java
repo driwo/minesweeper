@@ -11,8 +11,11 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
     int width;
     int height;
     AbstractTile[][] wereld = new AbstractTile[width][height];
-    private int count;
-    ArrayList<Integer> wachtrij = new ArrayList<>();
+
+    private int count;                    // explosive count gebruikt om te tellen hoeveel buren = explosief
+
+    ArrayList<Integer> wachtrij = new ArrayList<>();  //wachtrij van tegels die moeten open gaan, maar werkte niet goed
+                                                      //misschien ander soort systeem
 
 
     @Override
@@ -60,15 +63,15 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
         int rij;
         int j;
 
-        for(int i=0; i< explosive.length; i++)
-        {
+        for(int i=0; i< explosive.length; i++)    //toekennen van random waarde aan coordinaat van matrix en die als
+        {                                         // bom initieren
             j = explosive[i]/col;
             rij = explosive[i]%col;
             wereld[rij][j].setExplosief();
         }
 
 
-        setGameStateNotifier(viewNotifier);
+        setGameStateNotifier(viewNotifier);      // laten weten aan view dat game gestart is
         viewNotifier.notifyNewGame(row, col);
 
     }
@@ -81,7 +84,8 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
         {
             t.unflag();
 
-            viewNotifier.notifyUnflagged(x,y);
+            viewNotifier.notifyUnflagged(x,y);   //altijd laten weten aan view wat er gebeurd is
+                                                 // achter de schermen dan ook uitvoeren
         }
         else
         {
@@ -161,20 +165,20 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
                 if(t.isExplosive() == true)
                 {
-                    viewNotifier.notifyExploded(x,y);
+                    viewNotifier.notifyExploded(x,y);  //ontplof en spel gedaan
                     viewNotifier.notifyGameLost();
                 }
 
                 else
                 {
-                    int burenbom = explosiveNbCount(x,y);
+                    int burenbom = explosiveNbCount(x,y);  //functie dat telt burenbom
                     viewNotifier.notifyOpened(x,y,burenbom);
-                    System.out.println(x+ "en"+ y);
-                    if(burenbom == 0)
+
+                    if(burenbom == 0)      //enkel en alleen als tegel bomwaarde 0 heeft, moet alle andere worden omgedraaid
                     {
                         x = x -1;
                         y = y - 1;
-                        open(x,y);
+                        open(x,y);    // draait links schuinboven om, MAAR ALLE ANDERE MOETEN OOK NOG, WERKT NOG NIET!!!!
                     }
                 }
 
@@ -188,21 +192,21 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
         count = 0;
         x = x -1;
         y = y - 1;
-        checkNb(x,y);
+        checkNb(x,y);    //checkt links schuinboven
         x++;
-        checkNb(x,y);
+        checkNb(x,y);    // checkt boven
         x++;
-        checkNb(x,y);
+        checkNb(x,y);    // rechst schuin boven
         y++;
-        checkNb(x,y);
+        checkNb(x,y);    // rechts
         y++;
-        checkNb(x,y);
+        checkNb(x,y);    // rechst schuin onder
         x = x -1;
-        checkNb(x,y);
+        checkNb(x,y);    //onder
         x= x-1;
-        checkNb(x,y);
+        checkNb(x,y);   //links schuin onder
         y= y-1;
-        checkNb(x,y);
+        checkNb(x,y);   //links
         return count;
     }
 
@@ -215,7 +219,7 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
             {
                 count ++;
             }
-            else
+            else            //als niet een bom is in wachtrij steken om te open, WERKT NOG NIET!!!
             {
                 wachtrij.add(x);
                 wachtrij.add(y);

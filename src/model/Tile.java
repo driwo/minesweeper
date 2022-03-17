@@ -10,15 +10,14 @@ public class Tile extends AbstractTile implements TestableTile
 
     public Tile()
     {
-        vlag = false;
-
+        vlag = false;   // standaard geen vlag
     }
 
 
     @Override
     public boolean open()
     {
-        visible = true;
+        visible = true;      //openen tegel
         return visible;
     }
 
@@ -39,8 +38,6 @@ public class Tile extends AbstractTile implements TestableTile
 
     @Override
     public boolean isExplosive() {
-
-
         return explosief;
 
     }
