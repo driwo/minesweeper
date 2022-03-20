@@ -34,7 +34,15 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
         {
             startNewGame(8,8,10);
         }
-    }
+
+        if(level == Difficulty.MEDIUM){
+                startNewGame(16,16,40);
+        }
+        if(level == Difficulty.HARD){
+                startNewGame(30,30,99);
+            }
+        }
+
 
 
     @Override
@@ -53,7 +61,7 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
                 if (number == explosive[i]) { already = true;}
             }
 
-            if(already == false){
+            if(!already){
                 explosive[count] = number;
                 count++;
             }
@@ -80,7 +88,7 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
     public void toggleFlag(int x, int y)
     {
         Tile t = (Tile) wereld[x][y];
-        if(t.isFlagged() == true)
+        if(t.isFlagged())
         {
             t.unflag();
 
@@ -161,9 +169,7 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
                 Tile t = (Tile) wereld[x][y];
                 t.open();
 
-
-
-                if(t.isExplosive() == true)
+                if(t.isExplosive())
                 {
                     viewNotifier.notifyExploded(x,y);  //ontplof en spel gedaan
                     viewNotifier.notifyGameLost();
@@ -176,9 +182,39 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
                     if(burenbom == 0)      //enkel en alleen als tegel bomwaarde 0 heeft, moet alle andere worden omgedraaid
                     {
-                        x = x -1;
-                        y = y - 1;
-                        open(x,y);    // draait links schuinboven om, MAAR ALLE ANDERE MOETEN OOK NOG, WERKT NOG NIET!!!!
+                        /*
+
+                                try{
+
+                                    open(x+1,y+1);// draait links schuinboven om, MAAR ALLE ANDERE MOETEN OOK NOG, WERKT NOG NIET!!!!
+                                    //open(x-1,y-1);
+                                    //open(x+1,y-1);
+                                    //open(x-1,y+1);
+                                }
+                                catch (IndexOutOfBoundsException e){
+                                    //
+                                }
+                                */
+
+
+                        for(int i = x-1; i < x+2 ; i++){
+                            for(int j = y - 1; j < y + 2; j++){
+                                try{
+                                    Tile tegel = (Tile) wereld[i][j];
+                                    t.open();
+                                    //Nog niet af
+                                }
+                                catch (IndexOutOfBoundsException e){
+                                  //
+                                }
+                            }
+                        }
+
+
+
+
+
+
                     }
                 }
 
@@ -215,7 +251,7 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
         try
         {
             Tile t = (Tile) wereld[x][y];
-            if(t.isExplosive() == true)
+            if(t.isExplosive())
             {
                 count ++;
             }
