@@ -2,9 +2,9 @@ package model;
 
 import test.TestableMinesweeper;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
-import java.time.*;
-import java.util.concurrent.TimeUnit;
+
 
 public class Minesweeper extends AbstractMineSweeper implements TestableMinesweeper
 {
@@ -12,10 +12,10 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
     int height;
     AbstractTile[][] wereld = new AbstractTile[width][height];
 
-    private int count;                    // explosive count gebruikt om te tellen hoeveel buren = explosief
-
-    ArrayList<Integer> wachtrij = new ArrayList<>();  //wachtrij van tegels die moeten open gaan, maar werkte niet goed
-                                                      //misschien ander soort systeem
+    private int count;           // explosive count gebruikt om te tellen hoeveel buren = explosief
+    private ArrayList<Integer> wachtrij = new ArrayList<>();     //wachtrij van tegels die moeten open gaan, maar werkte niet goed
+    private ArrayList<Integer> queue = new ArrayList<>();        //misschien ander soort systeem
+    private int flagcount;
 
 
     @Override
@@ -32,16 +32,20 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
     public void startNewGame(Difficulty level) {
         if(level == Difficulty.EASY)
         {
+            flagcount = 10;
             startNewGame(8,8,10);
         }
 
         if(level == Difficulty.MEDIUM){
-                startNewGame(16,16,40);
+            flagcount = 40;
+            startNewGame(16,16,40);
         }
-        if(level == Difficulty.HARD){
-                startNewGame(30,30,99);
-            }
+        if(level == Difficulty.HARD)
+        {
+            flagcount = 99;
+            startNewGame(30,30,99);
         }
+    }
 
 
 
@@ -57,50 +61,56 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
         while(count < explosionCount){
             int number = randomGenerator.nextInt(row*col);
             boolean already = false;
-            for(int i = 0; i < explosionCount ; i++){
-                if (number == explosive[i]) { already = true;}
-            }
 
+            for(int i = 0; i < explosionCount ; i++)
+            {
+                if (number == explosive[i]) {
+                    already = true;
+                    break;
+                }
+            }
             if(!already){
                 explosive[count] = number;
                 count++;
             }
         }
-
-
         int rij;
         int j;
 
-        for(int i=0; i< explosive.length; i++)    //toekennen van random waarde aan coordinaat van matrix en die als
-        {                                         // bom initieren
-            j = explosive[i]/col;
-            rij = explosive[i]%col;
+        for (int k : explosive)     //toekennen van random waarde aan coordinaat van matrix en die als
+        {                           // bom initieren
+            j = k / col;
+            rij = k % col;
             wereld[rij][j].setExplosief();
         }
 
-
         setGameStateNotifier(viewNotifier);      // laten weten aan view dat game gestart is
         viewNotifier.notifyNewGame(row, col);
+        viewNotifier.notifyFlagCountChanged(flagcount);
 
     }
+
 
     @Override
     public void toggleFlag(int x, int y)
     {
+
         Tile t = (Tile) wereld[x][y];
-        if(t.isFlagged())
+        if(t.isFlagged() )
         {
             t.unflag();
-
+            flagcount++;
             viewNotifier.notifyUnflagged(x,y);   //altijd laten weten aan view wat er gebeurd is
                                                  // achter de schermen dan ook uitvoeren
         }
-        else
+        else if(flagcount > 0)
         {
             t.flag();
+            flagcount--;
             System.out.println("flag");
             viewNotifier.notifyFlagged(x,y);
         }
+        viewNotifier.notifyFlagCountChanged(flagcount);
 
     }
 
@@ -120,7 +130,7 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
         width = world.length;
         height = world[0].length;
         wereld = new AbstractTile[width][height];
-        System.out.println(wereld);
+        System.out.println(Arrays.deepToString(wereld));
 
         int n;
         int m;
@@ -162,70 +172,45 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
     public void open(int x, int y)
     {
 
-        if(x <  wereld.length && y < wereld[0].length)
+        if(x <  wereld.length && y < wereld[0].length && x>= 0 && y >= 0)   // x en y binnen het gebied
         {
-            if(x>= 0 && y >= 0)
+            Tile t = (Tile) wereld[x][y];
+            t.open();
+
+            if(t.isExplosive())
             {
-                Tile t = (Tile) wereld[x][y];
-                t.open();
+                viewNotifier.notifyExploded(x,y);  //ontplof en spel gedaan
+                viewNotifier.notifyGameLost();
+            }
 
-                if(t.isExplosive())
+            else
+            {
+                int burenbom = explosiveNbCount(x,y);  //functie dat telt burenbom en meer ... zie functie!
+                viewNotifier.notifyOpened(x,y,burenbom); // laten weten aan view om te openen
+
+                while(!wachtrij.isEmpty())  // tegels die nog moeten worden omgedraaid en niks indien wachtrij leeg is!
                 {
-                    viewNotifier.notifyExploded(x,y);  //ontplof en spel gedaan
-                    viewNotifier.notifyGameLost();
-                }
+                    int i = wachtrij.get(0);  //effe opslaan zodat die uit wachtrij kunnen verwijderen
+                    int j = wachtrij.get(1);
 
-                else
-                {
-                    int burenbom = explosiveNbCount(x,y);  //functie dat telt burenbom
-                    viewNotifier.notifyOpened(x,y,burenbom);
+                    wachtrij.remove(0); //uit wachtrij verwijderen, 2 keer index 0, want eerste keer schuift op!
+                    wachtrij.remove(0);
 
-                    if(burenbom == 0)      //enkel en alleen als tegel bomwaarde 0 heeft, moet alle andere worden omgedraaid
-                    {
-                        /*
-
-                                try{
-
-                                    open(x+1,y+1);// draait links schuinboven om, MAAR ALLE ANDERE MOETEN OOK NOG, WERKT NOG NIET!!!!
-                                    //open(x-1,y-1);
-                                    //open(x+1,y-1);
-                                    //open(x-1,y+1);
-                                }
-                                catch (IndexOutOfBoundsException e){
-                                    //
-                                }
-                                */
-
-
-                        for(int i = x-1; i < x+2 ; i++){
-                            for(int j = y - 1; j < y + 2; j++){
-                                try{
-                                    Tile tegel = (Tile) wereld[i][j];
-                                    t.open();
-                                    //Nog niet af
-                                }
-                                catch (IndexOutOfBoundsException e){
-                                  //
-                                }
-                            }
-                        }
-
-
-
-
-
-
+                    if(i != -1 && j != -1 && !wereld[i][j].isOpened())  //eerste 2 vragen zorgen er voor dat er
+                    {                                                   // geen exception out of bounds komt!
+                        open(i,j);
                     }
                 }
-
             }
 
         }
+
     }
 
     public int explosiveNbCount(int x, int y)
     {
-        count = 0;
+        queue.clear();   // terug leegmaken om met propere lei terug te beginnen
+        count = 0;       // count ook om 0 gezet, zelfde redenen als queue clearen
         x = x -1;
         y = y - 1;
         checkNb(x,y);    //checkt links schuinboven
@@ -243,6 +228,12 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
         checkNb(x,y);   //links schuin onder
         y= y-1;
         checkNb(x,y);   //links
+
+        if(queue.size() == 16)     //als elk vakje er rond geen bom is, of het vakje niet in gebied is vb (-1,-1)
+        {
+            wachtrij.addAll(queue); // heel queue binnen laten in grote wachtrij. schuift zo op naar functie open(x,y)
+        }                           // indien niet alles errond veilig is, niet naar grote wachtrij, maar wordt volgende keer gwn cleared.
+
         return count;
     }
 
@@ -255,14 +246,15 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
             {
                 count ++;
             }
-            else            //als niet een bom is in wachtrij steken om te open, WERKT NOG NIET!!!
+            else            //als niet een bom is in wachtrij steken om te open, maar is nog niet de officiële wachtrij
             {
-                wachtrij.add(x);
-                wachtrij.add(y);
+                queue.add(x);      //als dus niet alle vakjes veilig zijn zal dit wel in queue komen, maar later niet in wachtrij!
+                queue.add(y);
             }
         }
         catch (IndexOutOfBoundsException e){
-
+                queue.add(-1);
+                queue.add(-1);       //geeft aan dat alle vakjes die niet in gebied zijn, ook veilig zijn.
         }
     }
 
@@ -289,8 +281,7 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
     @Override
     public AbstractTile generateEmptyTile() {
-        Tile tile = new Tile();
-        return tile;
+        return new Tile();
     }
 
     @Override
