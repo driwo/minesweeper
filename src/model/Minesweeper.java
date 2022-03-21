@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 
+
 public class Minesweeper extends AbstractMineSweeper implements TestableMinesweeper
 {
     int width;
@@ -13,9 +14,9 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
     AbstractTile[][] wereld = new AbstractTile[width][height];
 
     private int count;           // explosive count gebruikt om te tellen hoeveel buren = explosief
-    private ArrayList<Integer> wachtrij = new ArrayList<>();     //wachtrij van tegels die moeten open gaan, maar werkte niet goed
-    private ArrayList<Integer> queue = new ArrayList<>();        //misschien ander soort systeem
-    private int flagcount;
+    private ArrayList<Integer> wachtrij = new ArrayList<>();     //echte wachtrij
+    private ArrayList<Integer> queue = new ArrayList<>();        //tussentijdse wachtrij
+    private int flagcount;                                       //flagcount enzu
 
 
     @Override
