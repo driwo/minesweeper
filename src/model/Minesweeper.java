@@ -16,7 +16,11 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
     private int count;           // explosive count gebruikt om te tellen hoeveel buren = explosief
     private ArrayList<Integer> wachtrij = new ArrayList<>();     //echte wachtrij
     private ArrayList<Integer> queue = new ArrayList<>();        //tussentijdse wachtrij
-    private int flagcount;                                       //flagcount enzu
+    private int flagcount;    //flagcount enzu
+    private boolean firstopen;
+    private int bomcount;
+    private int rij;
+    private int kolom;
 
 
     @Override
@@ -31,10 +35,11 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
     @Override
     public void startNewGame(Difficulty level) {
+
         if(level == Difficulty.EASY)
         {
-            flagcount = 10;
-            startNewGame(8,8,10);
+            flagcount = 16;
+            startNewGame(8,8,16);
         }
 
         if(level == Difficulty.MEDIUM){
@@ -52,7 +57,10 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
     @Override
     public void startNewGame(int row, int col, int explosionCount) {
-
+        rij = row;
+        kolom = col;
+        bomcount = explosionCount;
+        firstopen = true;
         wachtrij.clear();
         createWorld(row, col);
         int count = 0;
@@ -188,13 +196,23 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
             if(t.isExplosive())
             {
-                viewNotifier.notifyExploded(x,y);  //ontplof en spel gedaan
-                viewNotifier.notifyGameLost();
+                if(firstopen)
+                {
+                    deactivateFirstTileRule();
+
+                    System.out.println("der was een bom");
+                    open(x, y);
+                }
+                else
+                {
+                    viewNotifier.notifyExploded(x,y);  //ontplof en spel gedaan
+                    viewNotifier.notifyGameLost();
+                }
             }
 
             else
             {
-
+                firstopen = false;
                 int burenbom = explosiveNbCount(x,y);  //functie dat telt burenbom en meer ... zie functie!
                 viewNotifier.notifyOpened(x,y,burenbom); // laten weten aan view om te openen
 
@@ -286,7 +304,7 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
     // LATER PAS!!
     @Override
     public void deactivateFirstTileRule() {
-
+        startNewGame(rij, kolom, bomcount);
     }
 
     @Override
