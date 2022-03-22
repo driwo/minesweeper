@@ -56,27 +56,35 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
         wachtrij.clear();
         createWorld(row, col);
         int count = 0;
-        int[] explosive = new int[explosionCount];
+        ArrayList<Integer> explosive = new ArrayList<>();
+        int number = 0;
         Random randomGenerator = new Random();
 
         while(count < explosionCount){
-            int number = randomGenerator.nextInt(row*col);
+            number = randomGenerator.nextInt(row*col);
+            System.out.println(number);
             boolean already = false;
 
-            for(int i = 0; i < explosionCount ; i++)
+            for(int i = 0; i < explosive.size() ; i++)
             {
-                if (number == explosive[i]) {
+                if (number == explosive.get(i)) {
                     already = true;
                     break;
                 }
             }
             if(!already){
-                explosive[count] = number;
+                explosive.add(number);
                 count++;
             }
         }
         int rij;
         int j;
+
+        for(int k = 0; k< explosive.size() ; k++)
+        {
+            System.out.print(explosive.get(k) + "  ");
+        }
+
 
         for (int k : explosive)     //toekennen van random waarde aan coordinaat van matrix en die als
         {                           // bom initieren
