@@ -38,8 +38,8 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
         if(level == Difficulty.EASY)
         {
-            flagcount = 16;
-            startNewGame(8,8,16);
+            flagcount = 10;
+            startNewGame(8,8,10);
         }
 
         if(level == Difficulty.MEDIUM){
@@ -70,7 +70,7 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
         while(count < explosionCount){
             number = randomGenerator.nextInt(row*col);
-            System.out.println(number);
+
             boolean already = false;
 
             for(int i = 0; i < explosive.size() ; i++)
@@ -87,11 +87,6 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
         }
         int rij;
         int j;
-
-        for(int k = 0; k< explosive.size() ; k++)
-        {
-            System.out.print(explosive.get(k) + "  ");
-        }
 
 
         for (int k : explosive)     //toekennen van random waarde aan coordinaat van matrix en die als
