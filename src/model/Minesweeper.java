@@ -186,6 +186,7 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
             else
             {
+
                 int burenbom = explosiveNbCount(x,y);  //functie dat telt burenbom en meer ... zie functie!
                 viewNotifier.notifyOpened(x,y,burenbom); // laten weten aan view om te openen
 

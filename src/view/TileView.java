@@ -48,7 +48,7 @@ public class TileView extends JButton implements ITileStateNotifier {
     public void notifyExplode() {
         super.setText("");
         super.setIcon(bombIcon);
-        super.setEnabled(false);
+        super.setEnabled(true);
     }
 
     @Override
