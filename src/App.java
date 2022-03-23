@@ -15,7 +15,7 @@ public class App {
         Minesweeper model = new Minesweeper();            // initiate program
         MinesweeperView v = new MinesweeperView(model);   // setup view with correct program
         model.startNewGame(Difficulty.EASY);              // start game automatically
-        int tijd = 0;
+        int tijd;
         while(true)
         {
             Thread.sleep(10);
