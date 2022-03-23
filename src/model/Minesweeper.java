@@ -1,13 +1,11 @@
 package model;
 
 import test.TestableMinesweeper;
-
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
-//doe je best he gorpman
 
 public class Minesweeper extends AbstractMineSweeper implements TestableMinesweeper
 {
@@ -345,12 +343,5 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
     {
         return spelen;          // voor while loop
     }
-
-    public boolean getNewGame(){
-        boolean earlier = newGame;
-        newGame = false;
-        return earlier;
-    }
-
 
 }

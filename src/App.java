@@ -16,16 +16,18 @@ public class App {
         MinesweeperView v = new MinesweeperView(model);   // setup view with correct program
         model.startNewGame(Difficulty.EASY);              // start game automatically
         int tijd = 0;
-        while(model.getSpelen())
+        while(true)
         {
-            Duration duration = Duration.ofSeconds(tijd);
-            model.updateTime(duration);
-            Thread.sleep(1000);
-            tijd += 1;
+            Thread.sleep(10);
+            tijd = 0;
+            while(model.getSpelen())
+            {
+                Duration duration = Duration.ofSeconds(tijd);
+                model.updateTime(duration);
+                Thread.sleep(1000);
+                tijd += 1;
+            }
         }
-
-
-
 
     }
 }
