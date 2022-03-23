@@ -3,6 +3,8 @@ package view;
 import model.Difficulty;
 import model.PlayableMinesweeper;
 
+
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.plaf.DimensionUIResource;
@@ -138,6 +140,7 @@ public class MinesweeperView implements IGameStateNotifier {
 
     @Override
     public void notifyNewGame(int row, int col) {
+
         this.flagCountView.setText("0");
         this.window.setSize(col * TILE_SIZE, row * TILE_SIZE + 30);
         this.world.removeAll();
