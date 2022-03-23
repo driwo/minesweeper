@@ -26,8 +26,10 @@ public class App {
                 model.updateTime(duration);
                 Thread.sleep(1000);
                 tijd += 1;
+
             }
         }
 
     }
+
 }

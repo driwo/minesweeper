@@ -341,7 +341,7 @@ public class GameModelTester {
                 assertEquals(explosiveNeighbourCount, map[y][x]);
             }
             @Override
-            public void notifyGameWon() {
+            public void notifyGameWon(int t) {
                 assertTrue(true);
                 super.setInvoked();
             }
@@ -492,7 +492,7 @@ public class GameModelTester {
         }
 
         @Override
-        public void notifyGameWon() {
+        public void notifyGameWon(int t) {
             setInvoked();
             assertTrue("This method shouldn't be invoked in this test", false);       
         }

@@ -24,7 +24,7 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
     private int openCount; //Tellen hoeveel er open zijn
     private int maxOpen; //Aantal vakjes te openen voor winst
     private boolean spelen;
-    private boolean newGame;
+    private int tijd;
 
 
     @Override
@@ -39,7 +39,7 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
     @Override
     public void startNewGame(Difficulty level) {
-        newGame = true;
+
         spelen = true;
         openCount = 0;
         if(level == Difficulty.EASY)
@@ -58,7 +58,7 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
         {
             flagcount = 99;
             maxOpen = 801;
-            startNewGame(30,30,99);
+            startNewGame(30,16,99);
         }
     }
 
@@ -66,7 +66,7 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
     @Override
     public void startNewGame(int row, int col, int explosionCount) {
-        newGame = true;
+
         spelen = true;
         rij = row;
         kolom = col;
@@ -102,7 +102,7 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
         for (int k : explosive)     //toekennen van random waarde aan coordinaat van matrix en die als
         {                           // bom initieren
-            j = k / col;
+            j = k / row;
             rij = k % col;
             wereld[rij][j].setExplosief();
         }
@@ -331,7 +331,7 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
     private void didYouWin(){
         if(openCount == maxOpen){
             spelen = false;
-            viewNotifier.notifyGameWon();
+            viewNotifier.notifyGameWon(tijd);
         }
     }
 
@@ -342,6 +342,11 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
     public boolean getSpelen()
     {
         return spelen;          // voor while loop
+    }
+
+    public void setTijd(int t)
+    {
+        tijd = t;
     }
 
 }

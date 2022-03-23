@@ -5,7 +5,7 @@ import java.time.Duration;
 public interface IGameStateNotifier {
     void notifyNewGame(int row, int col);
     void notifyGameLost();
-    void notifyGameWon();
+    void notifyGameWon(int t);
     void notifyFlagCountChanged(int newFlagCount);
     void notifyTimeElapsedChanged(Duration newTimeElapsed);
     void notifyOpened(int x, int y, int explosiveNeighbourCount);

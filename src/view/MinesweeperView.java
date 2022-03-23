@@ -179,10 +179,10 @@ public class MinesweeperView implements IGameStateNotifier {
         //throw new UnsupportedOperationException();
     }
     @Override
-    public void notifyGameWon() {
+    public void notifyGameWon(int t) {
         this.removeAllTileEvents();
         JFrame confirmation = new JFrame();
-        JOptionPane.showMessageDialog(confirmation,  "Gefeliciteerd, u heeft gewonnen!"); //zelf toegevoegd
+        JOptionPane.showMessageDialog(confirmation,  "Gefeliciteerd, u heeft gewonnen! Score: " + t ); //zelf toegevoegd
         //throw new UnsupportedOperationException();
     }
 
