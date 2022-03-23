@@ -343,7 +343,7 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
     public boolean getSpelen()
     {
-        return spelen;
+        return spelen;          // voor while loop
     }
 
 
