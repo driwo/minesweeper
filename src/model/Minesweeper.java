@@ -26,6 +26,7 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
     private int openCount; //Tellen hoeveel er open zijn
     private int maxOpen; //Aantal vakjes te openen voor winst
     private boolean spelen;
+    private boolean newGame;
 
 
     @Override
@@ -40,6 +41,7 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
     @Override
     public void startNewGame(Difficulty level) {
+        newGame = true;
         spelen = true;
         openCount = 0;
         if(level == Difficulty.EASY)
@@ -66,6 +68,8 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
     @Override
     public void startNewGame(int row, int col, int explosionCount) {
+        newGame = true;
+        spelen = true;
         rij = row;
         kolom = col;
         bomcount = explosionCount;
@@ -189,12 +193,6 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
         }
     }
 
-    public void updateTime(Duration tijd)
-    {
-        viewNotifier.notifyTimeElapsedChanged(tijd);
-    }
-
-
     @Override
     public void open(int x, int y)
     {
@@ -210,16 +208,15 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
                 if(firstopen)
                 {
                     deactivateFirstTileRule();
-                    openCount=0;
+
                     System.out.println("der was een bom");
                     open(x, y);
                 }
                 else
                 {
-                    spelen = false;
                     viewNotifier.notifyExploded(x,y);  //ontplof en spel gedaan
+                    spelen = false;
                     viewNotifier.notifyGameLost();
-
                 }
             }
 
@@ -337,13 +334,22 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
         if(openCount == maxOpen){
             spelen = false;
             viewNotifier.notifyGameWon();
-
         }
+    }
+
+    public void updateTime(Duration time){
+        viewNotifier.notifyTimeElapsedChanged(time);
     }
 
     public boolean getSpelen()
     {
         return spelen;          // voor while loop
+    }
+
+    public boolean getNewGame(){
+        boolean earlier = newGame;
+        newGame = false;
+        return earlier;
     }
 
 
