@@ -1,6 +1,8 @@
 package model;
 
 import test.TestableMinesweeper;
+
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -23,6 +25,7 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
     private int kolom;
     private int openCount; //Tellen hoeveel er open zijn
     private int maxOpen; //Aantal vakjes te openen voor winst
+    private boolean spelen;
 
 
     @Override
@@ -37,24 +40,22 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
     @Override
     public void startNewGame(Difficulty level) {
-
+        spelen = true;
+        openCount = 0;
         if(level == Difficulty.EASY)
         {
-            openCount = 0;
             flagcount = 10;
             maxOpen = 54;
             startNewGame(8,8,10);
         }
 
         if(level == Difficulty.MEDIUM){
-            openCount = 0;
             flagcount = 40;
             maxOpen = 216;
             startNewGame(16,16,40);
         }
         if(level == Difficulty.HARD)
         {
-            openCount = 0;
             flagcount = 99;
             maxOpen = 801;
             startNewGame(30,30,99);
@@ -188,6 +189,12 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
         }
     }
 
+    public void updateTime(Duration tijd)
+    {
+        viewNotifier.notifyTimeElapsedChanged(tijd);
+    }
+
+
     @Override
     public void open(int x, int y)
     {
@@ -203,14 +210,16 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
                 if(firstopen)
                 {
                     deactivateFirstTileRule();
-
+                    openCount=0;
                     System.out.println("der was een bom");
                     open(x, y);
                 }
                 else
                 {
+                    spelen = false;
                     viewNotifier.notifyExploded(x,y);  //ontplof en spel gedaan
                     viewNotifier.notifyGameLost();
+
                 }
             }
 
@@ -326,8 +335,15 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
     private void didYouWin(){
         if(openCount == maxOpen){
+            spelen = false;
             viewNotifier.notifyGameWon();
+
         }
+    }
+
+    public boolean getSpelen()
+    {
+        return spelen;
     }
 
 
