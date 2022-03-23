@@ -21,6 +21,8 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
     private int bomcount;
     private int rij;
     private int kolom;
+    private int openCount; //Tellen hoeveel er open zijn
+    private int maxOpen; //Aantal vakjes te openen voor winst
 
 
     @Override
@@ -38,17 +40,23 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
 
         if(level == Difficulty.EASY)
         {
+            openCount = 0;
             flagcount = 10;
+            maxOpen = 54;
             startNewGame(8,8,10);
         }
 
         if(level == Difficulty.MEDIUM){
+            openCount = 0;
             flagcount = 40;
+            maxOpen = 216;
             startNewGame(16,16,40);
         }
         if(level == Difficulty.HARD)
         {
+            openCount = 0;
             flagcount = 99;
+            maxOpen = 801;
             startNewGame(30,30,99);
         }
     }
@@ -188,6 +196,7 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
         {
             Tile t = (Tile) wereld[x][y];
             t.open();
+            openCount++;
 
             if(t.isExplosive())
             {
@@ -227,6 +236,7 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
             }
 
         }
+        didYouWin();
 
     }
 
@@ -312,6 +322,12 @@ public class Minesweeper extends AbstractMineSweeper implements TestableMineswee
         Tile tile = new Tile();
         tile.setExplosief();
         return tile;
+    }
+
+    private void didYouWin(){
+        if(openCount == maxOpen){
+            viewNotifier.notifyGameWon();
+        }
     }
 
 
